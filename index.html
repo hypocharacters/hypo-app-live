@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hypo Characters MVP</title>
+    <title>Hypo Characters MVP - Final</title>
     
     <style>
         body {
@@ -13,6 +13,8 @@
             margin: 0;
             padding: 0;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         header {
             background-color: #374151; 
@@ -34,6 +36,44 @@
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
+            flex-grow: 1; 
+        }
+        /* --- LANDING PAGE STYLING --- */
+        #select-character-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 50px;
+            text-align: center;
+            flex-grow: 1;
+        }
+        .character-selection {
+            display: flex;
+            gap: 40px;
+            margin-top: 50px;
+        }
+        .character-card {
+            background-color: #374151;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 250px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+        .character-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(96, 165, 250, 0.3);
+        }
+        .character-card img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        /* --- App Content Styling (Hidden on start) --- */
+        #app-content {
+            display: none;
         }
         /* --- Navigation Tabs --- */
         .nav-tabs {
@@ -49,9 +89,6 @@
             transition: all 0.2s;
             color: #9ca3af;
         }
-        .nav-tab:hover {
-            color: #ffffff;
-        }
         .nav-tab.active {
             color: #60a5fa;
             border-bottom: 2px solid #60a5fa;
@@ -65,7 +102,7 @@
             border-radius: 8px;
             min-height: 600px;
         }
-        /* --- Wardrobe Specific Styling (Copied from prototype) --- */
+        /* --- Wardrobe Specific Styling --- */
         .wardrobe-content {
             display: flex;
             justify-content: space-around;
@@ -93,11 +130,12 @@
             opacity: 0.7; 
             mix-blend-mode: multiply; 
             pointer-events: none; 
-            border-radius: 50%;
+            border-radius: 5px;
         }
-        #shirt-layer { top: 10%; height: 45%; width: 90%; left: 5%; border-radius: 20%; }
-        #shorts-layer { top: 50%; height: 30%; width: 70%; left: 15%; border-radius: 20%; }
-        #shoes-layer { top: 80%; height: 15%; width: 40%; left: 30%; border-radius: 50%; }
+        /* Wardrobe Alignment Fix: Making the placeholders look like clothes */
+        #shirt-layer { top: 10%; height: 45%; width: 85%; left: 7.5%; }
+        #shorts-layer { top: 50%; height: 25%; width: 65%; left: 17.5%; }
+        #shoes-layer { top: 80%; height: 15%; width: 45%; left: 27.5%; }
 
         .menu-container {
             width: 45%;
@@ -110,6 +148,19 @@
             border: 2px solid #fff; transition: border-color 0.2s;
         }
         .color-selector button:hover { border-color: #f6ad55; }
+        .outfit-selector button {
+            background-color: #374151;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 5px;
+            cursor: pointer;
+            border: 1px solid #4b5563;
+            transition: background-color 0.2s;
+        }
+        .outfit-selector button:hover {
+            background-color: #4b5563;
+        }
         /* --- Shop Specific Styling --- */
         .shop-item-grid {
             display: grid;
@@ -154,14 +205,15 @@
             border-radius: 4px;
             color: white;
             font-weight: bold;
+            list-style: none;
+            margin-bottom: 5px;
         }
         .rarity-Common { background-color: #4a5568; }
         .rarity-Uncommon { background-color: #48bb78; }
         .rarity-Rare { background-color: #e53e3e; }
         .rarity-Legendary { background-color: #f6e05e; color: black !important; }
 
-
-        /* --- Custom Modal Styling (Moved from previous code) --- */
+        /* --- Custom Modal Styling --- */
         .modal {
             position: fixed;
             top: 0;
@@ -233,74 +285,447 @@
 
     <header>
         <div class="app-title">🇳🇿 Hypo Characters MVP</div>
-        </header>
+    </header>
 
     <div class="main-container">
 
-        <nav class="nav-tabs">
-            <div class="nav-tab active" data-target="wardrobe-section">👕 Wardrobe</div>
-            <div class="nav-tab" data-target="card-album-section">🃏 Card Album</div>
-            <div class="nav-tab" data-target="shop-section">🛒 Shop</div>
-        </nav>
+        <div id="select-character-page">
+            <h2 style="font-size: 2.5rem; margin-bottom: 10px;">Select Your Character</h2>
+            <p style="color: #a0aec0;">Your choice determines the base model for your Wardrobe.</p>
 
-        <section id="wardrobe-section" class="app-section" style="display: block;">
-            
-            <div class="wardrobe-content">
-                <div class="character-display">
-                    <h2 style="font-size: 1.5rem; margin-bottom: 20px;">Abraham's Wardrobe</h2>
-                    
-                    <div class="image-stack">
-                        <img src="master-body-01.png" alt="Abraham Base Model">
-
-                        <div id="shirt-layer" class="clothing-layer" style="display: none; background-color: #ff0000; z-index: 4;"></div>
-                        <div id="shorts-layer" class="clothing-layer" style="display: none; background-color: #0000ff; z-index: 3;"></div>
-                        <div id="shoes-layer" class="clothing-layer" style="display: none; background-color: #00ff00; z-index: 2;"></div>
-                    </div>
-                    
-                    <button id="download-mockup" style="margin-top: 30px; padding: 10px 20px; background-color: #48bb78; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                        MOCKUP: Save Final Image
-                    </button>
+            <div class="character-selection">
+                
+                <div class="character-card" data-character="Abraham">
+                    <img src="master-body-01.png" alt="Male Character">
+                    <h3 style="font-size: 1.5rem;">Abraham</h3>
+                    <p style="color: #9ca3af;">(The Master Model)</p>
                 </div>
 
-                <div class="menu-container">
-                    <h1 style="font-size: 1.5rem; margin-bottom: 40px;">Modular Controls</h1>
-
-                    <div class="menu-section">
-                        <h3>Shirt</h3>
-                        <div class="color-selector">
-                            <button data-layer="shirt-layer" data-color="none" style="background-color: transparent; border-color: #ff0000;"></button>
-                            <button data-layer="shirt-layer" data-color="#ff0000" style="background-color: red;"></button>
-                            <button data-layer="shirt-layer" data-color="#0000ff" style="background-color: blue;"></button>
-                            <button data-layer="shirt-layer" data-color="#48bb78" style="background-color: green;"></button>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-section">
-                        <h3>Shorts</h3>
-                        <div class="color-selector">
-                            <button data-layer="shorts-layer" data-color="none" style="background-color: transparent; border-color: #ff0000;"></button>
-                            <button data-layer="shorts-layer" data-color="#f6ad55" style="background-color: orange;"></button>
-                            <button data-layer="shorts-layer" data-color="#a0aec0" style="background-color: gray;"></button>
-                            <button data-layer="shorts-layer" data-color="#805ad5" style="background-color: purple;"></button>
-                        </div>
-                    </div>
-
-                    <div class="menu-section">
-                        <h3>Shoes</h3>
-                        <div class="color-selector">
-                            <button data-layer="shoes-layer" data-color="none" style="background-color: transparent; border-color: #ff0000;"></button>
-                            <button data-layer="shoes-layer" data-color="#000000" style="background-color: black;"></button>
-                            <button data-layer="shoes-layer" data-color="#ffffff" style="background-color: white;"></button>
-                            <button data-layer="shoes-layer" data-color="#c53030" style="background-color: brown;"></button>
-                        </div>
-                    </div>
+                <div class="character-card" data-character="Betty">
+                    <img src="master-body-01.png" alt="Female Character">
+                    <h3 style="font-size: 1.5rem;">Betty</h3>
+                    <p style="color: #9ca3af;">(Placeholder)</p>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section id="card-album-section" class="app-section">
-            <div style="text-align: center; padding: 50px;">
-                <h2 style="font-size: 2rem; color: #cbd5e0; margin-bottom: 10px;">🃏 Rugby Series</h2>
-                <p style="color: #9ca3af; margin-bottom: 40px;">Collect the 10-card set to unlock your head swap reward!</p>
+        <div id="app-content" style="display: none;">
+            <nav class="nav-tabs">
+                <div class="nav-tab active" data-target="wardrobe-section">👕 Wardrobe</div>
+                <div class="nav-tab" data-target="card-album-section">🃏 Card Album</div>
+                <div class="nav-tab" data-target="shop-section">🛒 Shop</div>
+            </nav>
+
+            <section id="wardrobe-section" class="app-section" style="display: block;">
                 
-                <div id="card-results" style="margin-bottom: 30px; min-height: 150px; background-color: #1
+                <div class="wardrobe-content">
+                    <div class="character-display">
+                        <h2 id="wardrobe-title" style="font-size: 1.5rem; margin-bottom: 20px;">Abraham's Wardrobe</h2>
+                        
+                        <div class="image-stack">
+                            <img id="base-character-img" src="" alt="Selected Base Model" style="width: 100%; height: auto;">
+
+                            <div id="shirt-layer" class="clothing-layer" style="display: none; background-color: #ff0000; z-index: 4;"></div>
+                            <div id="shorts-layer" class="clothing-layer" style="display: none; background-color: #0000ff; z-index: 3;"></div>
+                            <div id="shoes-layer" class="clothing-layer" style="display: none; background-color: #00ff00; z-index: 2;"></div>
+                        </div>
+                        
+                        <button id="download-mockup" style="margin-top: 30px; padding: 10px 20px; background-color: #48bb78; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            MOCKUP: Save Final Image
+                        </button>
+                    </div>
+
+                    <div class="menu-container">
+                        <h1 style="font-size: 1.5rem; margin-bottom: 40px;">Outfit Selector</h1>
+                        
+                        <p style="color: #a0aec0; margin-bottom: 10px;">Select from your collected outfits:</p>
+                        
+                        <div id="outfit-selector-menu" class="outfit-selector">
+                            <p style="color: #9ca3af;">Loading outfits...</p>
+                        </div>
+                        
+                    </div>
+                </div>
+            </section>
+
+            <section id="card-album-section" class="app-section">
+                <h2 style="font-size: 2rem; color: #cbd5e0; margin-bottom: 20px; text-align: center;">🃏 Card Album: Rugby Series</h2>
+                <p id="album-progress" style="color: #60a5fa; margin-bottom: 30px; text-align: center;">Progress: 0 / 12 Unique Cards Collected</p>
+                
+                <div style="background-color: #1a202c; padding: 20px; border-radius: 8px;">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 10px;">Your Collection</h3>
+                    <div id="collected-cards-container" style="min-height: 200px;">
+                    </div>
+                </div>
+
+                <div style="text-align: center; padding-top: 40px;">
+                    <div id="card-results" style="margin-bottom: 20px; min-height: 50px; background-color: #1a202c; border-radius: 8px; padding: 20px; display: inline-block; width: 350px;">
+                        <p style="color: #9ca3af;">Click below to open your pack and see what you get.</p>
+                    </div>
+
+                    <button id="open-pack-btn" style="padding: 15px 30px; background-color: #f6ad55; color: black; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1rem;">
+                        Open Pack (3 Cards)
+                    </button>
+
+                    <p style="margin-top: 15px; color: #a0aec0;">*Mockup: Packs are currently free and unlimited.*</p>
+                </div>
+            </section>
+
+            <section id="shop-section" class="app-section">
+                <h2 style="font-size: 2rem; margin-bottom: 30px; text-align: center;">🛒 The Shop: Premium Services</h2>
+
+                <div class="shop-item-grid">
+                    <div class="shop-card">
+                        <h4>Commission Bespoke Art</h4>
+                        <p>High-end custom uniforms, logos, or character likenesses. Priced individually.</p>
+                        <button id="shop-custom-btn">REQUEST QUOTE</button>
+                    </div>
+
+                    <div class="shop-card">
+                        <h4>Local Club Kit (NZ)</h4>
+                        <p>Official school or sports club uniform unlocks (Requires club partnership).</p>
+                        <button disabled>UNLOCK (Not Ready)</button>
+                    </div>
+                    
+                    <div class="shop-card">
+                        <h4>Wardrobe Utility Pack</h4>
+                        <p>Unlock 5 random clothing items immediately added to your Wardrobe.</p>
+                        <button disabled>BUY (Not Ready)</button>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="custom-modal" class="modal" style="display: none;">
+        <div class="modal-box">
+            <header class="modal-header">
+                <h3>Custom Character Request</h3>
+                <button id="close-custom-modal-btn" class="modal-close-btn">&times;</button>
+            </header>
+            
+            <div class="modal-content-area">
+                <p style="color: #d1d5db; margin-bottom: 20px;">
+                    Want a character in a specific uniform, club gear, or a likeness of yourself? Tell us what you're looking for! We will email you a quote and timeline.
+                </p>
+                <form id="custom-request-form">
+                    <div class="form-group">
+                        <label for="custom-name">Your Name</label>
+                        <input type="text" id="custom-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="custom-email">Email Address</label>
+                        <input type="email" id="custom-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="custom-details">Request Details (e.g., "Otago Boys' Rugby, No. 10")</label>
+                        <textarea id="custom-details" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Submit Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Configuration ---
+        const FORM_SUBMIT_EMAIL = "hypocharacters@icloud.com"; 
+        
+        // --- OUTFIT DATA (Final Local Test) ---
+        const BASE_URL = ""; 
+
+        const OUTFIT_DATA = {
+            'Abraham': {
+                'Underwear': 'master-body-01.png',
+                'Cricket Whites': 'master-cricket-01.png',
+                'Rugby Kit': 'master-rugby-01.png'
+            },
+            'Betty': {
+                'Underwear': 'master-body-01.png' 
+            }
+        };
+
+        // --- Card Data Structure (The Rugby Series) ---
+        const CARDS = [
+            { id: 101, name: "Abraham - Front Pose", type: "Character", rarity: "Common", img: "master-basketball-01.png" },
+            { id: 102, name: "Betty - Front Pose", type: "Character", rarity: "Common", img: "master-basketball-01.png" }, 
+            { id: 103, name: "Clarence - Front Pose", type: "Character", rarity: "Common", img: "master-basketball-01.png" }, 
+            { id: 104, name: "Dolores - Front Pose", type: "Character", rarity: "Common", img: "master-basketball-01.png" },
+            { id: 201, name: "Abraham - Action Pose I", type: "Action", rarity: "Uncommon", img: "master-rugby-01.png" }, 
+            { id: 202, name: "Betty - Action Pose I", type: "Action", rarity: "Uncommon", img: "master-rugby-01.png" }, 
+            { id: 301, name: "Rugby Jersey (Red)", type: "Clothing", rarity: "Common", img: "master-rugby-01.png" }, 
+            { id: 302, name: "Rugby Shorts (White)", type: "Clothing", rarity: "Common", img: "master-rugby-01.png" }, 
+            { id: 303, name: "Blank Uniform Card", type: "Utility", rarity: "Rare", img: "master-rugby-01.png" }, 
+            { id: 401, name: "Golden Rugby Ball", type: "Item", rarity: "Rare", img: "master-rugby-01.png" },
+            { id: 402, name: "Team Bus Concept", type: "Item", rarity: "Rare", img: "master-rugby-01.png" },
+            { id: 501, name: "The Collector's Vault Key", type: "Reward", rarity: "Legendary", img: "master-rugby-01.png" }
+        ];
+
+        let currentCharacter = 'Abraham'; // Default character
+
+        // --- Outfit Swap Logic ---
+        function swapOutfit(outfitName) {
+            const imgElement = document.getElementById('base-character-img');
+            const outfitUrl = OUTFIT_DATA[currentCharacter][outfitName];
+            
+            if (imgElement && outfitUrl) {
+                imgElement.src = outfitUrl;
+            }
+        }
+
+        function populateOutfitMenu() {
+            const menu = document.getElementById('outfit-selector-menu');
+            if (!menu) return;
+
+            menu.innerHTML = '';
+            
+            const outfits = OUTFIT_DATA[currentCharacter] || {};
+            
+            Object.keys(outfits).forEach(outfitName => {
+                const button = document.createElement('button');
+                button.textContent = outfitName;
+                button.setAttribute('data-outfit', outfitName);
+                button.addEventListener('click', () => swapOutfit(outfitName));
+                menu.appendChild(button);
+            });
+            
+            const firstOutfit = Object.keys(outfits)[0];
+            if (firstOutfit) {
+                swapOutfit(firstOutfit);
+            }
+        }
+
+        // --- Inventory/Persistence Setup ---
+        function getInventory() {
+            const inventory = localStorage.getItem('hypo_inventory');
+            return inventory ? JSON.parse(inventory) : { collectedCards: [] };
+        }
+
+        function saveInventory(inventory) {
+            localStorage.setItem('hypo_inventory', JSON.stringify(inventory));
+        }
+
+        function updateAlbumDisplay() {
+            const inventory = getInventory();
+            const collectedContainer = document.getElementById('collected-cards-container');
+            const totalCards = CARDS.length;
+            const uniqueCollected = new Set(inventory.collectedCards.map(c => c.id)).size;
+
+            if (!collectedContainer) return;
+
+            if (uniqueCollected === 0) {
+                collectedContainer.innerHTML = '<p style="color: #9ca3af; margin-top: 20px;">Your album is empty! Open a pack to begin collecting.</p> <p style="color: #9ca3af; margin-top: 5px;">Your collected cards will save even if you close the browser.</p>';
+            } else {
+                let cardListHTML = '<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px;">';
+                const albumContent = CARDS.map(masterCard => {
+                    const isCollected = inventory.collectedCards.some(collected => collected.id === masterCard.id);
+                    const rarityColor = masterCard.rarity === 'Legendary' ? 'rgba(255, 215, 0, 0.2)' : masterCard.rarity === 'Rare' ? 'rgba(255, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.1)';
+                    const opacity = isCollected ? '1.0' : '0.2';
+                    const label = isCollected ? masterCard.name.split(' - ')[0] : '???';
+
+                    return `
+                        <div style="width: 100px; height: 140px; background-color: ${rarityColor}; border: 1px solid #4b5563; border-radius: 8px; opacity: ${opacity}; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.7rem; text-align: center;">
+                            <p style="font-weight: bold; margin: 0; color: ${isCollected ? 'white' : '#9ca3af'};">${label}</p>
+                            <p style="font-size: 0.6rem; color: #a0aec0;">${masterCard.rarity}</p>
+                        </div>
+                    `;
+                }).join('');
+                cardListHTML += albumContent + '</div>';
+                collectedContainer.innerHTML = cardListHTML;
+            }
+
+            document.getElementById('album-progress').textContent = `Progress: ${uniqueCollected} / ${totalCards} Unique Cards Collected`;
+        }
+
+
+        // --- Card Album Logic ---
+        function openPack() {
+            const cardDisplay = document.getElementById('card-results');
+            if (!cardDisplay) return;
+            
+            cardDisplay.innerHTML = '<h3>Opening Pack...</h3>';
+            const packSize = 3;
+            const openedCards = [];
+            const inventory = getInventory();
+            
+            for (let i = 0; i < packSize; i++) {
+                const randomIndex = Math.floor(Math.random() * CARDS.length);
+                const card = CARDS[randomIndex];
+                openedCards.push(card);
+                inventory.collectedCards.push(card); 
+            }
+
+            saveInventory(inventory); 
+
+            setTimeout(() => {
+                let resultsHTML = '<h3>🏆 You Opened:</h3><ul style="list-style-type: none; padding: 0; margin: 10px auto; max-width: 300px;">';
+                openedCards.forEach(card => {
+                    resultsHTML += `<li class="rarity-${card.rarity}">${card.name} (${card.rarity})</li>`;
+                });
+                resultsHTML += '</ul>';
+                cardDisplay.innerHTML = resultsHTML;
+
+                updateAlbumDisplay(); 
+                const clothingCard = openedCards.find(c => c.type === 'Clothing');
+                if (clothingCard) {
+                    console.log(`Item Unlocked: ${clothingCard.name}`);
+                }
+            }, 1000);
+        }
+
+
+        // --- Navigation Logic ---
+        function setupNavigation() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            const sections = document.querySelectorAll('.app-section');
+
+            const handleTabClick = (targetId) => {
+                tabs.forEach(t => t.classList.remove('active'));
+                sections.forEach(s => s.style.display = 'none');
+                
+                const activeTab = document.querySelector(`.nav-tab[data-target="${targetId}"]`);
+                if (activeTab) activeTab.classList.add('active');
+                
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) targetElement.style.display = 'block';
+                
+                if (targetId === 'wardrobe-section') {
+                    populateOutfitMenu();
+                }
+                if (targetId === 'card-album-section') {
+                    updateAlbumDisplay(); 
+                }
+            };
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    handleTabClick(e.currentTarget.getAttribute('data-target'));
+                });
+            });
+        }
+
+
+        // --- Character Select Logic ---
+        function setupCharacterSelect() {
+            const selectPage = document.getElementById('select-character-page');
+            const appContent = document.getElementById('app-content');
+            const characterCards = document.querySelectorAll('.character-card');
+            const wardrobeTitle = document.getElementById('wardrobe-title');
+            const baseCharacterImg = document.getElementById('base-character-img');
+            const defaultBettyImage = OUTFIT_DATA.Betty['Underwear'];
+
+            characterCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    const charName = e.currentTarget.getAttribute('data-character');
+                    currentCharacter = charName; 
+
+                    wardrobeTitle.textContent = `${charName}'s Wardrobe`;
+                    
+                    baseCharacterImg.src = (charName === 'Abraham') 
+                        ? OUTFIT_DATA.Abraham['Underwear']
+                        : defaultBettyImage; 
+
+                    selectPage.style.display = 'none';
+                    appContent.style.display = 'block';
+                    
+                    setupNavigation();
+                    populateOutfitMenu();
+                    
+                    const firstOutfitName = Object.keys(OUTFIT_DATA[charName])[0];
+                    if (firstOutfitName) {
+                        swapOutfit(firstOutfitName);
+                    }
+                });
+            });
+        }
+
+
+        // --- Form Submission Logic (FormSubmit) ---
+        function submitForm(data) {
+            const customModal = document.getElementById('custom-modal');
+            const customForm = document.getElementById('custom-request-form');
+            const FORM_SUBMIT_EMAIL = "hypocharacters@icloud.com"; 
+            const url = `https://formsubmit.co/ajax/${FORM_SUBMIT_EMAIL}`; 
+            
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("✅ Success! Your request has been sent. We will contact you soon with a quote.");
+                } else {
+                    alert("❌ Submission Failed. Please try again.");
+                }
+                if (customForm) customForm.reset();
+                if (customModal) customModal.style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error submitting form:', error);
+                alert("❌ An error occurred during submission. Please check your internet connection.");
+                const customModal = document.getElementById('custom-modal');
+                if (customModal) customModal.style.display = 'none';
+            });
+        }
+
+
+        // --- Main Initialization Function ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setupCharacterSelect();
+            
+            // Set up Modals and Forms
+            const customModal = document.getElementById('custom-modal');
+            const closeCustomModalBtn = document.getElementById('close-custom-modal-btn');
+            const customForm = document.getElementById('custom-request-form');
+            const shopCustomBtn = document.getElementById('shop-custom-btn');
+            
+            if (shopCustomBtn) {
+                shopCustomBtn.addEventListener('click', () => { customModal.style.display = 'flex'; });
+            }
+
+            if (closeCustomModalBtn) {
+                closeCustomModalBtn.addEventListener('click', () => { customModal.style.display = 'none'; });
+            }
+
+            if (customModal) {
+                customModal.addEventListener('click', (event) => {
+                    if (event.target === customModal) { customModal.style.display = 'none'; }
+                });
+            }
+
+            if (customForm) {
+                customForm.addEventListener('submit', (event) => {
+                    event.preventDefault(); 
+                    
+                    const name = document.getElementById('custom-name').value;
+                    const email = document.getElementById('custom-email').value;
+                    const details = document.getElementById('custom-details').value;
+
+                    const submissionData = {
+                        "_subject": "NEW Custom Character Request (NZ App)", 
+                        "Customer Name": name,
+                        "Customer Email": email, 
+                        "Request Details": details,
+                        "Source": "Hypo Characters MVP - Shop Commission"
+                    };
+
+                    submitForm(submissionData);
+                });
+            }
+
+            // Hook up "Open Pack" button
+            const openPackBtn = document.getElementById('open-pack-btn');
+            if (openPackBtn) {
+                openPackBtn.addEventListener('click', openPack);
+            }
+        });
+    </script>
+</body>
+</html>
